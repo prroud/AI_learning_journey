@@ -1,0 +1,1 @@
+All labs were done in web IDE, due to course requirements. The system was so weird, it was hard to copy there
