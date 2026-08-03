@@ -96,5 +96,3 @@ MODEL_SAVE_PATH = MODEL_PATH / MODEL_NAME
 
 print(f"Saving model to: {MODEL_SAVE_PATH}")
 torch.save(obj=model.state_dict(), f=MODEL_SAVE_PATH)
-
-
