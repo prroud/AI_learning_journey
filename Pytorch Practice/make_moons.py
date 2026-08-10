@@ -58,38 +58,36 @@ optimizer = torch.optim.Adam(params=model.parameters(), lr=LR)
 
 for epoch in range(EPOCHS):
     train_loss = 0
-    train_acc = 0
     model.train()
     for X_batch, y_batch in train_dataloader:
         X_batch, y_batch = X_batch.to(device), y_batch.to(device)
-        y_logits = model(X_batch).squeeze()
+        y_logits = model(X_batch).squeeze(dim=1)
         y_preds = torch.round(torch.sigmoid(y_logits))
         loss = loss_fn(y_logits, y_batch)
-        acc = accuracy(y_preds, y_batch)
+        accuracy.update(y_preds, y_batch)
         train_loss += loss.item()
-        train_acc += acc.item()
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
     train_loss /= len(train_dataloader)
-    train_acc /= len(train_dataloader)
+    train_acc = accuracy.compute().item()
+    accuracy.reset()
 
     if epoch % 5 == 0:
         test_loss = 0
-        test_acc = 0
         model.eval()
         with torch.inference_mode():
             for X_batch, y_batch in test_dataloader:
                 X_batch, y_batch = X_batch.to(device), y_batch.to(device)
-                y_test_logits = model(X_batch).squeeze()
+                y_test_logits = model(X_batch).squeeze(dim=1)
                 y_test_preds = torch.round(torch.sigmoid(y_test_logits))
                 loss = loss_fn(y_test_logits, y_batch)
-                acc = accuracy(y_test_preds, y_batch)
+                accuracy.update(y_test_preds, y_batch)
                 test_loss += loss.item()
-                test_acc += acc.item()
-
+                
         test_loss /= len(test_dataloader)
-        test_acc /= len(test_dataloader)
+        test_acc = accuracy.compute().item()
+        accuracy.reset()
 
         print(f"Epoch: {epoch} | Train loss: {train_loss:.4f} | Train accuracy: {train_acc*100:.2f}% | Test loss: {test_loss:.4f} | Test accuracy: {test_acc*100:.2f}%")
 
