@@ -1,0 +1,6 @@
+# This file is used internally by FFMPEG.
+file 'file:E:/Nauka/Informatyka/Git/repo/AI_learning_journey/The Art of ML/01_manim/media/videos/intro/1080p60/partial_movie_files/Intro/1003894338_806875208_223132457.mp4'
+file 'file:E:/Nauka/Informatyka/Git/repo/AI_learning_journey/The Art of ML/01_manim/media/videos/intro/1080p60/partial_movie_files/Intro/1312478325_713410444_2226715028.mp4'
+file 'file:E:/Nauka/Informatyka/Git/repo/AI_learning_journey/The Art of ML/01_manim/media/videos/intro/1080p60/partial_movie_files/Intro/1312478325_3873173991_1766027241.mp4'
+file 'file:E:/Nauka/Informatyka/Git/repo/AI_learning_journey/The Art of ML/01_manim/media/videos/intro/1080p60/partial_movie_files/Intro/1312478325_1781676096_2014409083.mp4'
+file 'file:E:/Nauka/Informatyka/Git/repo/AI_learning_journey/The Art of ML/01_manim/media/videos/intro/1080p60/partial_movie_files/Intro/1312478325_4235033027_4014776057.mp4'

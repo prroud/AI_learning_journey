@@ -1,3 +1,0 @@
-# This file is used internally by FFMPEG.
-file 'file:E:/Nauka/Informatyka/Git/repo/AI_learning_journey/The Art of ML/01_manim/media/videos/intro/1080p60/partial_movie_files/Pith/3373382780_320954674_223132457.mp4'
-file 'file:E:/Nauka/Informatyka/Git/repo/AI_learning_journey/The Art of ML/01_manim/media/videos/intro/1080p60/partial_movie_files/Pith/4234509111_4046863825_4107008672.mp4'
