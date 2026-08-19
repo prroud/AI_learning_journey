@@ -9,7 +9,7 @@ class Intro(Scene):
 
         channel_name = Text("The Art of Machine Learning", font_size=52, weight=BOLD)
 
-        underline = Line(LEFT, RIGHT, color="#38BDF8", stroke_width=3)
+        underline = Line(LEFT, RIGHT, color="#334155", stroke_width=3)
         underline.match_width(channel_name)
         underline.next_to(channel_name, DOWN, buff=0.25)
 
@@ -43,7 +43,7 @@ class Intro(Scene):
 
         agenda_group = VGroup()
         for item in agenda_items:
-            text = Text(item, font_size=26, color = "#E2E8F0")
+            text = Text(item, font_size=26, color=WHITE)
             agenda_group.add(text)
 
         agenda_group.arrange(DOWN, aligned_edge=LEFT, buff=0.45)
@@ -52,7 +52,7 @@ class Intro(Scene):
         logos = self.get_tech_logos()
 
         logos_box = VGroup(
-            Text("Using: ", font_size=20, color="#94A3B8"),
+            Text("Using: ", font_size=20, color=WHITE),
             logos
         ).arrange(DOWN, buff=0.3, aligned_edge=LEFT)
 
@@ -89,9 +89,5 @@ class Intro(Scene):
                 py_img.set_color_by_gradient("#306998", "#FFD43B")
 
             return VGroup(py_img, pt_img).arrange(RIGHT, buff=0.8)
-
-
-
-
 
 
