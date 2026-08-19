@@ -7,9 +7,9 @@ class Intro(Scene):
 
         # Scene 1 - Channel Name
 
-        channel_name = Text("The Art of Machine Learning", font_size=52, weight=BOLD)
+        channel_name = Text("The Art of Machine Learning", font_size=52, weight=BOLD, color="#fffcd6")
 
-        underline = Line(LEFT, RIGHT, color="#334155", stroke_width=3)
+        underline = Line(LEFT, RIGHT, color="#78716c", stroke_width=3)
         underline.match_width(channel_name)
         underline.next_to(channel_name, DOWN, buff=0.25)
 
@@ -27,15 +27,15 @@ class Intro(Scene):
 
         # Scene 2 - Topic and Agenda
 
-        topic_title = Text("How neural network learns linear function", font_size=40, weight=BOLD)
+        topic_title = Text("How neural network learns linear function", font_size=40, weight=BOLD, color="#fffcd6")
         topic_title.to_edge(UP, buff=0.8)
 
-        divider = Line(start=ORIGIN, end=RIGHT*11.2, color="#334155", stroke_width=2)
+        divider = Line(start=ORIGIN, end=RIGHT*11.2, color="#78716c", stroke_width=2)
         divider.next_to(topic_title, DOWN, buff=0.25, aligned_edge=LEFT)
 
         agenda_items = [
             "1. Short introduction to linear functions",
-            "2. Creating, spliting and analysing the data",
+            "2. Creating, splitting and analysing the data",
             "3. Building and training the model",
             "4. Analysing model output",
             "5. Saving the model"
@@ -43,7 +43,7 @@ class Intro(Scene):
 
         agenda_group = VGroup()
         for item in agenda_items:
-            text = Text(item, font_size=26, color=WHITE)
+            text = Text(item, font_size=26, color="#d3e7fa")
             agenda_group.add(text)
 
         agenda_group.arrange(DOWN, aligned_edge=LEFT, buff=0.45)
@@ -52,7 +52,7 @@ class Intro(Scene):
         logos = self.get_tech_logos()
 
         logos_box = VGroup(
-            Text("Using: ", font_size=20, color=WHITE),
+            Text("Using: ", font_size=20, color="#94a3b8"),
             logos
         ).arrange(DOWN, buff=0.3, aligned_edge=LEFT)
 
