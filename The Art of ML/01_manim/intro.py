@@ -46,7 +46,7 @@ class Intro(Scene):
         agenda_group.arrange(DOWN, aligned_edge=LEFT, buff=0.45)
         agenda_group.next_to(divider, DOWN, buff=0.6, aligned_edge=LEFT)
 
-        logos = self.get_tech_logos()
+        logos = get_tech_logos()
 
         logos_box = VGroup(
             Text("Using: ", font_size=20, color="#94a3b8"),
