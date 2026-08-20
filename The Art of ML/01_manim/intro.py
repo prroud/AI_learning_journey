@@ -1,12 +1,12 @@
 from manim import *
 import os
+from get_tech_logos import get_tech_logos
 
 class Intro(Scene):
     def construct(self):
         self.camera.background_color = "#020b1a"
 
         # Scene 1 - Channel Name
-
         channel_name = Text("The Art of Machine Learning", font_size=52, weight=BOLD, color="#fffcd6")
 
         underline = Line(LEFT, RIGHT, color="#78716c", stroke_width=3)
@@ -23,10 +23,7 @@ class Intro(Scene):
         self.wait(0.3)
 
 
-
-
         # Scene 2 - Topic and Agenda
-
         topic_title = Text("How neural network learns linear function", font_size=40, weight=BOLD, color="#fffcd6")
         topic_title.to_edge(UP, buff=0.8)
 
@@ -72,22 +69,66 @@ class Intro(Scene):
 
         self.wait(3)
 
-    def get_tech_logos(self):
-            python_path = "python_logo.svg"
-            pytorch_path = "pytorch_logo.svg"
-            
-            py_img = SVGMobject(python_path)
-            pt_img = SVGMobject(pytorch_path)
-            
-            py_img.height = 1.0
-            pt_img.height = 1.0
+        self.play(FadeOut(topic_title, agenda_group, logos_box, divider))
 
-            if len(py_img) >= 2:
-                py_img[0].set_color("#306998")  
-                py_img[1].set_color("#FFD43B")  
-            else:
-                py_img.set_color_by_gradient("#306998", "#FFD43B")
 
-            return VGroup(py_img, pt_img).arrange(RIGHT, buff=0.8)
+        # Scene 3 - Linear Function
+
+        axes = Axes(
+            x_range=[-4, 4, 1],
+            y_range=[-3, 5, 1],
+            x_length=8,
+            y_length=6,
+            axis_config={"include_numbers": True},
+            ).to_edge(LEFT, buff=0.5)
+
+        axes_labels = axes.get_axis_labels(x_label="x", y_label="y")
+
+        a_tracker = ValueTracker(1)
+        b_tracker = ValueTracker(0)
+
+        graph = always_redraw(
+            lambda: axes.plot(
+                lambda x: a_tracker.get_value() * x + b_tracker.get_value(),
+                x_range=[-3, 3],
+                color=BLUE,
+            )
+        )
+
+        formula = always_redraw(
+            lambda: MathTex(f"y = {a_tracker.get_value():.1f}x + {b_tracker.get_value():.1f}"
+        ).scale(1.2).to_edge(RIGHT, buff=1.0).shift(UP*2))
+
+        info_text = Text("a - slop\nb - bias", font_size=24).next_to(formula, DOWN, buff=1.0)
+
+        self.play(Create(axes), Write(axes_labels))
+        self.play(Write(formula), FadeIn(info_text))
+        self.play(Create(graph))
+        self.wait(1)
+
+
+        self.play(a_tracker.animate.set_value(2.5), run_time=2)
+        self.wait(0.5)
+        self.play(a_tracker.animate.set_value(-1.5), run_time=2)
+        self.wait(0.5)
+        self.play(a_tracker.animate.set_value(1.0), run_time=1)  
+        self.wait(0.5)
+
+
+        self.play(b_tracker.animate.set_value(3.0), run_time=2)
+        self.wait(0.5)
+        self.play(b_tracker.animate.set_value(-2.0), run_time=2)
+        self.wait(0.5)
+        self.play(b_tracker.animate.set_value(0.0), run_time=1)  
+        self.wait(1)
+
+
+        self.play(
+            a_tracker.animate.set_value(0.5),
+            b_tracker.animate.set_value(2.0),
+            run_time=2
+        )
+        self.wait(2)
+    
 
 
