@@ -143,10 +143,10 @@ class Intro(Scene):
             .align_to(general_formula, LEFT)
         )
 
-        slope_info = MathTex(r"\mathbf{a}", r"\text{ --- slope (weight)}", font_size=28)
+        slope_info = MathTex(r"\mathbf{a}", r"\text{ --- weight}", font_size=28)
         slope_info.set_color_by_tex(r"\mathbf{a}", YELLOW)
 
-        bias_info = MathTex(r"\mathbf{b}", r"\text{ --- intercept (bias)}", font_size=28)
+        bias_info = MathTex(r"\mathbf{b}", r"\text{ --- bias (intercept)}", font_size=28)
         bias_info.set_color_by_tex(r"\mathbf{b}", RED)
 
         right_panel = VGroup(
@@ -195,3 +195,4 @@ class Intro(Scene):
         self.wait(3)
 
         self.play(FadeOut(title_group, axes, axes_labels, panel_box, general_formula, dynamic_formula, slope_info, bias_info, graph))
+
