@@ -1,6 +1,6 @@
 from manim import *
 
-def get_tech_logos(self):
+def get_tech_logos():
     python_path = "python_logo.svg"
     pytorch_path = "pytorch_logo.svg"
             
