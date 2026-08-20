@@ -74,24 +74,36 @@ class Intro(Scene):
 
         # Scene 3 - Linear Function
 
-        title_text = Text("2-Dimensional Case", font_size=32, weight=BOLD)
-        title_box = SurroundingRectangle(title_text, color=WHITE, buff=0.15, corner_radius=0.1)
+        title_text = Text("2-Dimensional Case", font_size=32, weight=BOLD, color="#fffcd6")
+        title_box = SurroundingRectangle(title_text, buff=0.15, corner_radius=0.1, color="#78716c")
         title_group = VGroup(title_text, title_box).to_edge(UP, buff=0.3)
 
-
+        # -------------------------------------------------------------
+        # 2. SYMETRYCZNY UKŁAD WSPÓŁRZĘDNYCH (Jednakowe zakresy i długości)
+        # -------------------------------------------------------------
         axes = Axes(
             x_range=[-4, 4, 1],
-            y_range=[-3, 5, 1],
-            x_length=7,
+            y_range=[-4, 4, 1],
+            x_length=5.5,
             y_length=5.5,
-            axis_config={"include_numbers": True},
-        ).to_edge(LEFT, buff=0.6).shift(DOWN * 0.3)
+            axis_config={"include_numbers": True,
+                         "color": "#d3e7fa"},
+        ).to_edge(LEFT, buff=0.8).shift(DOWN * 0.2)
 
-        axes_labels = axes.get_axis_labels(x_label="x", y_label="y")
+        axes_labels = axes.get_axis_labels(
+        x_label=MathTex("x", color="#d3e7fa"), 
+        y_label=MathTex("y", color="#d3e7fa")  
+        )
 
+        axes_group = VGroup(axes, axes_labels)
+
+        # -------------------------------------------------------------
+        # 3. DYNAMICZNE ZMIENNE & PROSTA
+        # -------------------------------------------------------------
         a_tracker = ValueTracker(1)
         b_tracker = ValueTracker(0)
 
+        # Wykres prostej
         graph = always_redraw(
             lambda: axes.plot(
                 lambda x: a_tracker.get_value() * x + b_tracker.get_value(),
@@ -100,17 +112,21 @@ class Intro(Scene):
             )
         )
 
-        general_formula = MathTex("y = ", "a", "x + ", "b", font_size=40)
+        # -------------------------------------------------------------
+        # 4. KARTA PARAMETRÓW (Prawa strona)
+        # -------------------------------------------------------------
+        general_formula = MathTex("y = ", "a", "x + ", "b", font_size=40, color="#d3e7fa")
         general_formula.set_color_by_tex("a", YELLOW)
         general_formula.set_color_by_tex("b", RED)
 
-        # Dynamiczny wzór z aktualnymi wartościami
         dynamic_formula = always_redraw(
             lambda: MathTex(
                 f"y = {a_tracker.get_value():.1f}x " + 
                 (f"+ {b_tracker.get_value():.1f}" if b_tracker.get_value() >= 0 else f"- {abs(b_tracker.get_value()):.1f}"),
                 font_size=36
             )
+            .next_to(general_formula, DOWN, buff=0.3)  # Położenie pod wzorem ogólnym
+            .align_to(general_formula, LEFT)            # PRZYKOTWICZENIE DO LEWEJ KRAWĘDZI
         )
 
         slope_info = MathTex(r"\mathbf{a}", r"\text{ --- slope (weight)}", font_size=28)
@@ -122,17 +138,22 @@ class Intro(Scene):
         right_panel = VGroup(
             general_formula,
             dynamic_formula,
-            Line(LEFT, RIGHT, color=GRAY_D, stroke_width=1.5).scale(1.5),
             slope_info,
             bias_info
         ).arrange(DOWN, aligned_edge=LEFT, buff=0.35)
 
         right_panel.to_edge(RIGHT, buff=0.8).shift(DOWN * 0.2)
+        panel_box = SurroundingRectangle(right_panel, color="#78716c", buff=0.25, corner_radius=0.1)
 
-        panel_box = SurroundingRectangle(right_panel, color=GRAY_B, buff=0.25, corner_radius=0.1)
-
-        self.play(Create(title_group))
-        self.play(Create(axes), Write(axes_labels))
+        # -------------------------------------------------------------
+        # 5. ANIMACJA
+        # -------------------------------------------------------------
+        # Dedykowana animacja dla nagłówka: najpierw tekst, potem powoli rysujemy ramkę
+        self.play(Write(title_text))
+        self.play(Create(title_box), run_time=1.2)
+        
+        # Pojawienie się układu osi oraz karty parametrów
+        self.play(FadeIn(axes_group))
         self.play(
             Create(panel_box),
             Write(general_formula),
@@ -143,6 +164,7 @@ class Intro(Scene):
         self.play(Create(graph))
         self.wait(1)
 
+        # Animacja 1: Manipulacja wagą 'a'
         self.play(a_tracker.animate.set_value(2.5), run_time=2)
         self.wait(0.5)
         self.play(a_tracker.animate.set_value(-1.5), run_time=2)
@@ -150,6 +172,7 @@ class Intro(Scene):
         self.play(a_tracker.animate.set_value(1.0), run_time=1)
         self.wait(0.5)
 
+        # Animacja 2: Manipulacja biasem 'b'
         self.play(b_tracker.animate.set_value(3.0), run_time=2)
         self.wait(0.5)
         self.play(b_tracker.animate.set_value(-2.0), run_time=2)
@@ -157,6 +180,7 @@ class Intro(Scene):
         self.play(b_tracker.animate.set_value(0.0), run_time=1)
         self.wait(1)
 
+        # Animacja 3: Zmiana obu parametrów jednocześnie
         self.play(
             a_tracker.animate.set_value(0.5),
             b_tracker.animate.set_value(2.0),
@@ -166,7 +190,6 @@ class Intro(Scene):
 
         self.play(FadeOut(title_group, axes, axes_labels, panel_box, general_formula, dynamic_formula, slope_info, bias_info))
 
-        self.wait(2)
     
 
 
