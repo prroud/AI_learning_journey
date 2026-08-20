@@ -74,13 +74,18 @@ class Intro(Scene):
 
         # Scene 3 - Linear Function
 
+        title_text = Text("2-Dimensional Case", font_size=32, weight=BOLD)
+        title_box = SurroundingRectangle(title_text, color=WHITE, buff=0.15, corner_radius=0.1)
+        title_group = VGroup(title_text, title_box).to_edge(UP, buff=0.3)
+
+
         axes = Axes(
             x_range=[-4, 4, 1],
             y_range=[-3, 5, 1],
-            x_length=8,
-            y_length=6,
+            x_length=7,
+            y_length=5.5,
             axis_config={"include_numbers": True},
-            ).to_edge(LEFT, buff=0.5)
+        ).to_edge(LEFT, buff=0.6).shift(DOWN * 0.3)
 
         axes_labels = axes.get_axis_labels(x_label="x", y_label="y")
 
@@ -90,44 +95,77 @@ class Intro(Scene):
         graph = always_redraw(
             lambda: axes.plot(
                 lambda x: a_tracker.get_value() * x + b_tracker.get_value(),
-                x_range=[-3, 3],
+                x_range=[-3.5, 3.5],
                 color=BLUE,
             )
         )
 
-        formula = always_redraw(
-            lambda: MathTex(f"y = {a_tracker.get_value():.1f}x + {b_tracker.get_value():.1f}"
-        ).scale(1.2).to_edge(RIGHT, buff=1.0).shift(UP*2))
+        general_formula = MathTex("y = ", "a", "x + ", "b", font_size=40)
+        general_formula.set_color_by_tex("a", YELLOW)
+        general_formula.set_color_by_tex("b", RED)
 
-        info_text = Text("a - slop\nb - bias", font_size=24).next_to(formula, DOWN, buff=1.0)
+        # Dynamiczny wzór z aktualnymi wartościami
+        dynamic_formula = always_redraw(
+            lambda: MathTex(
+                f"y = {a_tracker.get_value():.1f}x " + 
+                (f"+ {b_tracker.get_value():.1f}" if b_tracker.get_value() >= 0 else f"- {abs(b_tracker.get_value()):.1f}"),
+                font_size=36
+            )
+        )
 
+        slope_info = MathTex(r"\mathbf{a}", r"\text{ --- slope (weight)}", font_size=28)
+        slope_info.set_color_by_tex(r"\mathbf{a}", YELLOW)
+
+        bias_info = MathTex(r"\mathbf{b}", r"\text{ --- intercept (bias)}", font_size=28)
+        bias_info.set_color_by_tex(r"\mathbf{b}", RED)
+
+        right_panel = VGroup(
+            general_formula,
+            dynamic_formula,
+            Line(LEFT, RIGHT, color=GRAY_D, stroke_width=1.5).scale(1.5),
+            slope_info,
+            bias_info
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.35)
+
+        right_panel.to_edge(RIGHT, buff=0.8).shift(DOWN * 0.2)
+
+        panel_box = SurroundingRectangle(right_panel, color=GRAY_B, buff=0.25, corner_radius=0.1)
+
+        self.play(Create(title_group))
         self.play(Create(axes), Write(axes_labels))
-        self.play(Write(formula), FadeIn(info_text))
+        self.play(
+            Create(panel_box),
+            Write(general_formula),
+            Write(dynamic_formula),
+            Write(slope_info),
+            Write(bias_info)
+        )
         self.play(Create(graph))
         self.wait(1)
-
 
         self.play(a_tracker.animate.set_value(2.5), run_time=2)
         self.wait(0.5)
         self.play(a_tracker.animate.set_value(-1.5), run_time=2)
         self.wait(0.5)
-        self.play(a_tracker.animate.set_value(1.0), run_time=1)  
+        self.play(a_tracker.animate.set_value(1.0), run_time=1)
         self.wait(0.5)
-
 
         self.play(b_tracker.animate.set_value(3.0), run_time=2)
         self.wait(0.5)
         self.play(b_tracker.animate.set_value(-2.0), run_time=2)
         self.wait(0.5)
-        self.play(b_tracker.animate.set_value(0.0), run_time=1)  
+        self.play(b_tracker.animate.set_value(0.0), run_time=1)
         self.wait(1)
-
 
         self.play(
             a_tracker.animate.set_value(0.5),
             b_tracker.animate.set_value(2.0),
             run_time=2
         )
+        self.wait(3)
+
+        self.play(FadeOut(title_group, axes, axes_labels, panel_box, general_formula, dynamic_formula, slope_info, bias_info))
+
         self.wait(2)
     
 
