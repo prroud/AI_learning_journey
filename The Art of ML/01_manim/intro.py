@@ -6,7 +6,9 @@ class Intro(Scene):
     def construct(self):
         self.camera.background_color = "#020b1a"
 
-        # Scene 1 - Channel Name
+        # -------------------------------------------------------------
+        # Scene 1 - channel name
+        # -------------------------------------------------------------
         channel_name = Text("The Art of Machine Learning", font_size=52, weight=BOLD, color="#fffcd6")
 
         underline = Line(LEFT, RIGHT, color="#78716c", stroke_width=3)
@@ -23,7 +25,9 @@ class Intro(Scene):
         self.wait(0.3)
 
 
-        # Scene 2 - Topic and Agenda
+        # -------------------------------------------------------------
+        # Scene 2 - topic and agenda
+        # -------------------------------------------------------------
         topic_title = Text("How neural network learns linear function", font_size=40, weight=BOLD, color="#fffcd6")
         topic_title.to_edge(UP, buff=0.8)
 
@@ -72,15 +76,14 @@ class Intro(Scene):
         self.play(FadeOut(topic_title, agenda_group, logos_box, divider))
 
 
-        # Scene 3 - Linear Function
+        # -------------------------------------------------------------
+        # Scene 3 - linear function in 2d
+        # -------------------------------------------------------------
 
         title_text = Text("2-Dimensional Case", font_size=32, weight=BOLD, color="#fffcd6")
         title_box = SurroundingRectangle(title_text, buff=0.15, corner_radius=0.1, color="#78716c")
         title_group = VGroup(title_text, title_box).to_edge(UP, buff=0.3)
 
-        # -------------------------------------------------------------
-        # 2. SYMETRYCZNY UKŁAD WSPÓŁRZĘDNYCH (Jednakowe zakresy i długości)
-        # -------------------------------------------------------------
         axes = Axes(
             x_range=[-4, 4, 1],
             y_range=[-4, 4, 1],
@@ -97,9 +100,6 @@ class Intro(Scene):
 
         axes_group = VGroup(axes, axes_labels)
 
-        # -------------------------------------------------------------
-        # 3. DYNAMICZNE ZMIENNE & PROSTA
-        # -------------------------------------------------------------
         a_tracker = ValueTracker(1)
         b_tracker = ValueTracker(0)
 
@@ -107,24 +107,19 @@ class Intro(Scene):
             a = a_tracker.get_value()
             b = b_tracker.get_value()
             
-            # Domyślny zakres dla osi
             x_min, x_max = -4.0, 4.0
             y_min, y_max = -4.0, 4.0
 
-            # Jeśli prosta nie jest pozioma, docinamy x tak, by y nie wychodził poza osie
             if abs(a) > 1e-5:
-                # Obliczamy punkty x dla granic y_min i y_max
                 x_at_ymin = (y_min - b) / a
                 x_at_ymax = (y_max - b) / a
                 
-                # Nowy dozwolony zakres x
                 computed_min = min(x_at_ymin, x_at_ymax)
                 computed_max = max(x_at_ymin, x_at_ymax)
                 
                 x_min = max(x_min, computed_min)
                 x_max = min(x_max, computed_max)
 
-            # Zwracamy dociętą prostą
             return axes.plot(
                 lambda x: a * x + b,
                 x_range=[x_min, x_max],
@@ -134,17 +129,12 @@ class Intro(Scene):
 
         graph = always_redraw(get_bounded_graph)
 
-        # -------------------------------------------------------------
-        # 4. KARTA PARAMETRÓW (Prawa strona)
-        # -------------------------------------------------------------
         general_formula = MathTex("y = ", "a", "x + ", "b", font_size=40, color="#d3e7fa")
         general_formula.set_color_by_tex("a", YELLOW)
         general_formula.set_color_by_tex("b", RED)
 
         dynamic_formula = always_redraw(
             lambda: MathTex(
-                # `+` przed `.1f` sprawia, że dodatnie liczby zawsze mają jawny znak +,
-                # co zapobiega skakaniu szerokości napisu przy zmianie znaku!
                 f"y = {a_tracker.get_value():.1f}x {b_tracker.get_value():+.1f}",
                 font_size=36,
                 color="#d3e7fa"
@@ -169,14 +159,9 @@ class Intro(Scene):
         right_panel.to_edge(RIGHT, buff=0.8).shift(DOWN * 0.2)
         panel_box = SurroundingRectangle(right_panel, color="#78716c", buff=0.25, corner_radius=0.1)
 
-        # -------------------------------------------------------------
-        # 5. ANIMACJA
-        # -------------------------------------------------------------
-        # Dedykowana animacja dla nagłówka: najpierw tekst, potem powoli rysujemy ramkę
         self.play(Write(title_text))
         self.play(Create(title_box), run_time=1.2)
         
-        # Pojawienie się układu osi oraz karty parametrów
         self.play(FadeIn(axes_group))
         self.play(
             Create(panel_box),
@@ -188,7 +173,6 @@ class Intro(Scene):
         self.play(Create(graph))
         self.wait(1)
 
-        # Animacja 1: Manipulacja wagą 'a'
         self.play(a_tracker.animate.set_value(2.5), run_time=2)
         self.wait(0.5)
         self.play(a_tracker.animate.set_value(-1.5), run_time=2)
@@ -196,7 +180,6 @@ class Intro(Scene):
         self.play(a_tracker.animate.set_value(1.0), run_time=1)
         self.wait(0.5)
 
-        # Animacja 2: Manipulacja biasem 'b'
         self.play(b_tracker.animate.set_value(3.0), run_time=2)
         self.wait(0.5)
         self.play(b_tracker.animate.set_value(-2.0), run_time=2)
@@ -204,7 +187,6 @@ class Intro(Scene):
         self.play(b_tracker.animate.set_value(0.0), run_time=1)
         self.wait(1)
 
-        # Animacja 3: Zmiana obu parametrów jednocześnie
         self.play(
             a_tracker.animate.set_value(0.5),
             b_tracker.animate.set_value(2.0),
@@ -213,7 +195,3 @@ class Intro(Scene):
         self.wait(3)
 
         self.play(FadeOut(title_group, axes, axes_labels, panel_box, general_formula, dynamic_formula, slope_info, bias_info, graph))
-
-    
-
-
