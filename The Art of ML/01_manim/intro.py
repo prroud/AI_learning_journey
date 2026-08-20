@@ -103,14 +103,36 @@ class Intro(Scene):
         a_tracker = ValueTracker(1)
         b_tracker = ValueTracker(0)
 
-        # Wykres prostej
-        graph = always_redraw(
-            lambda: axes.plot(
-                lambda x: a_tracker.get_value() * x + b_tracker.get_value(),
-                x_range=[-3.5, 3.5],
+        def get_bounded_graph():
+            a = a_tracker.get_value()
+            b = b_tracker.get_value()
+            
+            # Domyślny zakres dla osi
+            x_min, x_max = -4.0, 4.0
+            y_min, y_max = -4.0, 4.0
+
+            # Jeśli prosta nie jest pozioma, docinamy x tak, by y nie wychodził poza osie
+            if abs(a) > 1e-5:
+                # Obliczamy punkty x dla granic y_min i y_max
+                x_at_ymin = (y_min - b) / a
+                x_at_ymax = (y_max - b) / a
+                
+                # Nowy dozwolony zakres x
+                computed_min = min(x_at_ymin, x_at_ymax)
+                computed_max = max(x_at_ymin, x_at_ymax)
+                
+                x_min = max(x_min, computed_min)
+                x_max = min(x_max, computed_max)
+
+            # Zwracamy dociętą prostą
+            return axes.plot(
+                lambda x: a * x + b,
+                x_range=[x_min, x_max],
                 color=BLUE,
+                stroke_width=4
             )
-        )
+
+        graph = always_redraw(get_bounded_graph)
 
         # -------------------------------------------------------------
         # 4. KARTA PARAMETRÓW (Prawa strona)
@@ -121,12 +143,14 @@ class Intro(Scene):
 
         dynamic_formula = always_redraw(
             lambda: MathTex(
-                f"y = {a_tracker.get_value():.1f}x " + 
-                (f"+ {b_tracker.get_value():.1f}" if b_tracker.get_value() >= 0 else f"- {abs(b_tracker.get_value()):.1f}"),
-                font_size=36
+                # `+` przed `.1f` sprawia, że dodatnie liczby zawsze mają jawny znak +,
+                # co zapobiega skakaniu szerokości napisu przy zmianie znaku!
+                f"y = {a_tracker.get_value():.1f}x {b_tracker.get_value():+.1f}",
+                font_size=36,
+                color="#d3e7fa"
             )
-            .next_to(general_formula, DOWN, buff=0.3)  # Położenie pod wzorem ogólnym
-            .align_to(general_formula, LEFT)            # PRZYKOTWICZENIE DO LEWEJ KRAWĘDZI
+            .next_to(general_formula, DOWN, buff=0.3)
+            .align_to(general_formula, LEFT)
         )
 
         slope_info = MathTex(r"\mathbf{a}", r"\text{ --- slope (weight)}", font_size=28)
@@ -188,7 +212,7 @@ class Intro(Scene):
         )
         self.wait(3)
 
-        self.play(FadeOut(title_group, axes, axes_labels, panel_box, general_formula, dynamic_formula, slope_info, bias_info))
+        self.play(FadeOut(title_group, axes, axes_labels, panel_box, general_formula, dynamic_formula, slope_info, bias_info, graph))
 
     
 
