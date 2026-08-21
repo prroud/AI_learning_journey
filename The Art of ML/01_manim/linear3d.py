@@ -150,3 +150,112 @@ class Linear3D(ThreeDScene):
             FadeOut(axes_labels),
             FadeOut(graph)
         )
+
+
+        # -------------------------------------------------------------
+        # Scene 5 - Generalisation for n-dimension
+        # -------------------------------------------------------------
+
+        # Reset camera angle to 2D view for text layout
+        self.set_camera_orientation(phi=0 * DEGREES, theta=-90 * DEGREES)
+
+        # 1. Title matching theme
+        n_title_text = Text("Generalisation for n-dimensions", font_size=32, weight=BOLD, color="#fffcd6")
+        n_title_box = SurroundingRectangle(n_title_text, buff=0.15, corner_radius=0.1, color="#78716c")
+        n_title_group = VGroup(n_title_text, n_title_box).to_edge(UP, buff=0.3)
+
+        self.add_fixed_in_frame_mobjects(n_title_group)
+        self.play(Write(n_title_text), Create(n_title_box), run_time=1.2)
+        self.wait(0.5)
+
+        # 2. General scalar equation for n dimensions
+        n_formula = MathTex(
+            "y", "=", "w_1", "x_1", "+", "w_2", "x_2", "+", r"\dots", "+", "w_n", "x_n", "+", "b",
+            font_size=34, color="#d3e7fa"
+        ).move_to(UP * 2.0)
+
+        n_formula.set_color_by_tex("w_1", YELLOW)
+        n_formula.set_color_by_tex("w_2", YELLOW)
+        n_formula.set_color_by_tex("w_n", YELLOW)
+        n_formula.set_color_by_tex("b", GREEN)
+
+        self.add_fixed_in_frame_mobjects(n_formula)
+        self.play(Write(n_formula), run_time=1.5)
+        self.wait(0.8)
+
+        # 3. Vector definitions (W vector of weights, X vector of features)
+        vec_W = MathTex(
+            r"\mathbf{W} = \begin{bmatrix} w_1 \\ w_2 \\ \vdots \\ w_n \end{bmatrix}",
+            font_size=32, color="#d3e7fa"
+        )
+        vec_W.set_color_by_tex("w_1", YELLOW)
+        vec_W.set_color_by_tex("w_2", YELLOW)
+        vec_W.set_color_by_tex("w_n", YELLOW)
+
+        label_W = Text("Weight Vector", font_size=20, color=YELLOW).next_to(vec_W, DOWN, buff=0.2)
+        group_W = VGroup(vec_W, label_W).move_to(LEFT * 3.2 + UP * 0.1)
+
+        vec_X = MathTex(
+            r"\mathbf{X} = \begin{bmatrix} x_1 \\ x_2 \\ \vdots \\ x_n \end{bmatrix}",
+            font_size=32, color="#d3e7fa"
+        )
+        label_X = Text("Feature Vector", font_size=20, color="#d3e7fa").next_to(vec_X, DOWN, buff=0.2)
+        group_X = VGroup(vec_X, label_X).move_to(RIGHT * 3.2 + UP * 0.1)
+
+        self.add_fixed_in_frame_mobjects(group_W, group_X)
+        self.play(
+            Write(group_W),
+            Write(group_X),
+            run_time=2.0
+        )
+        self.wait(1.0)
+
+        # 4. Transposition step (showing W^T)
+        vec_WT = MathTex(
+            r"\mathbf{W}^T = \begin{bmatrix} w_1 & w_2 & \dots & w_n \end{bmatrix}",
+            font_size=32, color="#d3e7fa"
+        ).move_to(DOWN * 1.0)
+        vec_WT.set_color_by_tex("w_1", YELLOW)
+        vec_WT.set_color_by_tex("w_2", YELLOW)
+        vec_WT.set_color_by_tex("w_n", YELLOW)
+
+        label_WT = Text("Transposed Weight Vector", font_size=18, color="#78716c").next_to(vec_WT, DOWN, buff=0.15)
+        group_WT = VGroup(vec_WT, label_WT)
+
+        self.add_fixed_in_frame_mobjects(group_WT)
+        self.play(ReplacementTransform(group_W.copy(), group_WT), run_time=1.5)
+        self.wait(1.0)
+
+        # 5. Combining into vector product W^T X + b
+        dot_product = MathTex(
+            r"\mathbf{W}^T \mathbf{X} = w_1 x_1 + w_2 x_2 + \dots + w_n x_n",
+            font_size=32, color="#d3e7fa"
+        ).move_to(DOWN * 1.9)
+        dot_product.set_color_by_tex("w_1", YELLOW)
+        dot_product.set_color_by_tex("w_2", YELLOW)
+        dot_product.set_color_by_tex("w_n", YELLOW)
+
+        self.add_fixed_in_frame_mobjects(dot_product)
+        self.play(Write(dot_product), run_time=1.5)
+        self.wait(1.0)
+
+        # 6. Final highlight box with vector form y = W^T X + b
+        final_eq = MathTex(
+            r"y = \mathbf{W}^T \mathbf{X} + b",
+            font_size=42, color="#fffcd6"
+        )
+        final_eq.set_color_by_tex(r"\mathbf{W}", YELLOW)
+        final_eq.set_color_by_tex("b", GREEN)
+
+        final_box = SurroundingRectangle(final_eq, color=YELLOW, buff=0.25, corner_radius=0.1)
+        final_group = VGroup(final_eq, final_box).move_to(DOWN * 2.9)
+
+        self.add_fixed_in_frame_mobjects(final_group)
+        self.play(
+            FadeIn(final_group, shift=UP * 0.2),
+            run_time=1.5
+        )
+        self.wait(3.0)
+
+        self.play(FadeOut(final_group))
+
