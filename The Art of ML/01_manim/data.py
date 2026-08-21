@@ -2,7 +2,10 @@ from manim import *
 
 class Data(Scene):
     def construct(self):
-
+        self.camera.background_color = "#020b1a"
+        # -------------------------------------------------------------
+        # Scene 6 - Linear function in 3D (Plane)
+        # -------------------------------------------------------------
 
         w_tracker = ValueTracker(0.66)
         b_tracker = ValueTracker(0.27)
@@ -14,10 +17,12 @@ class Data(Scene):
             y_range=[0, 10, 2],
             x_length=4.2,
             y_length=4.2,
-            axis_config={"include_numbers": True}
+            axis_config={"include_numbers": True,
+                         "color": "#d3e7fa"}
         ).to_edge(LEFT, buff=0.6)
 
-        title_data = Text("1. Przestrzeń danych", font_size=20, color=BLUE_B).next_to(axes_data, UP)
+        axes_data_labels = axes_data.get_axis_labels(x_label="x", y_label="y")
+        title_data = Text("Data", font_size=20, color="#d3e7fa").next_to(axes_data, UP)
 
         dots_data = VGroup(*[
             Dot(axes_data.c2p(x, y), color=YELLOW, radius=0.08)
@@ -32,8 +37,8 @@ class Data(Scene):
 
         line_label = always_redraw(lambda: MathTex(
             f"y = {w_tracker.get_value():.2f}x + {b_tracker.get_value():.2f}",
-            font_size=22,
-            color=BLUE
+            font_size=36,
+            color="#d3e7fa"
         ).next_to(axes_data, DOWN, buff=0.2))
 
         axes_param = Axes(
@@ -41,11 +46,18 @@ class Data(Scene):
             y_range=[0, 3.0, 1.0],
             x_length=4.2,
             y_length=4.2,
-            axis_config={"include_numbers": True}
+            axis_config={"include_numbers": True,
+                         "color": "#d3e7fa"},
         ).to_edge(RIGHT, buff=0.6)
 
-        title_param = Text("2. Przestrzeń (w, b)", font_size=20, color=GREEN_B).next_to(axes_param, UP)
+        title_param = Text("Loss function", font_size=20, color="#d3e7fa").next_to(axes_param, UP)
         axes_param_labels = axes_param.get_axis_labels(x_label="w", y_label="b")
+
+        mse_formula = MathTex(
+            r"\text{MSE} = \frac{1}{N} \sum_{i=1}^N \left( y_i - (w \cdot x_i + b) \right)^2",
+            font_size=36, 
+            color="#d3e7fa"
+        ).next_to(axes_param, DOWN, buff=0.25)
 
         param_dot = always_redraw(lambda: Dot(
             axes_param.c2p(w_tracker.get_value(), b_tracker.get_value()),
@@ -64,18 +76,16 @@ class Data(Scene):
         target_label = MathTex("Min", font_size=16, color=GREEN).next_to(target_dot, UR, buff=0.05)
 
         self.play(
-            Create(axes_data), Write(title_data), FadeIn(dots_data),
-            Create(axes_param), Write(title_param), Write(axes_param_labels),
-            Create(contours), FadeIn(target_dot), Write(target_label)
+            FadeIn(axes_data), Write(title_data), FadeIn(dots_data),
+            FadeIn(axes_param), Write(title_param), Write(axes_param_labels), Write(mse_formula),
+            Create(contours), FadeIn(target_dot), Write(target_label), Write(axes_data_labels)
         )
         self.play(Create(line), Write(line_label), FadeIn(param_dot))
         self.wait(0.5)
 
-
-        banner = Text("Krok 1: Forward Propagation (Liczę błąd)", font_size=20, color=YELLOW).to_corner(UP)
+        banner = Text("Forward propagation, calculating loss", font_size=32, weight=BOLD, color="#fffcd6").to_corner(UP)
         self.play(Write(banner))
 
-        # Dynamiczne linie błędu (residuali)
         def get_error_lines():
             lines = VGroup()
             w = w_tracker.get_value()
@@ -92,7 +102,7 @@ class Data(Scene):
         self.play(Indicate(param_dot, color=RED, scale_factor=1.4))
         self.wait(1)
 
-        banner_back = Text("Krok 2: Backpropagation (Liczę gradienty dL/dw, dL/db)", font_size=20, color=RED).to_corner(UP)
+        banner_back = Text("Backpropagation, calculating gradients", font_size=32, weight=BOLD, color="#fffcd6").to_corner(UP)
         self.play(Transform(banner, banner_back))
 
         formula = MathTex(
@@ -108,11 +118,11 @@ class Data(Scene):
             max_tip_length_to_length_ratio=0.2
         )
 
-        self.play(Create(grad_arrow), Write(formula))
+        self.play(FadeIn(grad_arrow), Write(formula))
         self.wait(1.5)
         self.play(FadeOut(grad_arrow), FadeOut(formula))
 
-        banner_gd = Text("Krok 3: Gradient Descent (Aktualizuję parametry z Learning Rate)", font_size=18, color=GREEN).to_corner(UP)
+        banner_gd = Text("Gradient descent", font_size=32, weight=BOLD, color="#fffcd6").to_corner(UP)
         self.play(Transform(banner, banner_gd))
 
         steps = [
@@ -132,7 +142,7 @@ class Data(Scene):
             self.wait(0.3)
 
 
-        banner_final = Text("Model wyuczony! Błąd zminimalizowany.", font_size=20, color=BLUE).to_corner(UP)
+        banner_final = Text("Learning is done, found the minima of loss function", font_size=32, weight=BOLD, color="#fffcd6").to_corner(UP)
         self.play(Transform(banner, banner_final))
         self.play(Indicate(line, color=GREEN), Indicate(param_dot, color=GREEN))
         self.wait(2)
