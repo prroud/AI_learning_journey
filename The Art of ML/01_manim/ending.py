@@ -78,21 +78,17 @@ class Outro(Scene):
 
         outro_group = VGroup(thanks_text, thanks_underline).move_to(ORIGIN)
 
+        fade_to_black = Rectangle(
+                        width=config.frame_width + 1,
+                        height=config.frame_height + 1,
+                        color=BLACK,
+                        fill_color=BLACK,
+                        fill_opacity=1
+                    )
+
         self.play(Write(thanks_text), run_time=1.8)
         self.play(Create(thanks_underline), run_time=0.6)
         self.wait(1.5)
 
-        # self.play(FadeOut(Group(*self.mobjects)), run_time=1.2)
+        self.play(FadeOut(Group(*self.mobjects)), FadeIn(fade_to_black), run_time=1.5)
         
-        # Opcjonalne przestawienie tła na czyste #000000 i krótka pauza w czerni
-        fade_to_black = Rectangle(
-                width=config.frame_width + 1,
-                height=config.frame_height + 1,
-                color=BLACK,
-                fill_color=BLACK,
-                fill_opacity=1
-            )
-
-            # Płynny FadeIn czarnego ekranu (możesz dostosować run_time, np. 1.5 lub 2.0 sekundy)
-        self.play(FadeIn(fade_to_black), run_time=1.5)
-        self.wait(0.5)

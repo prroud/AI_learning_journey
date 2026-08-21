@@ -15,5 +15,4 @@ file 'file:E:/Nauka/Informatyka/Git/repo/AI_learning_journey/The Art of ML/01_ma
 file 'file:E:/Nauka/Informatyka/Git/repo/AI_learning_journey/The Art of ML/01_manim/media/videos/ending/1080p60/partial_movie_files/Outro/3047284485_460831879_3260051755.mp4'
 file 'file:E:/Nauka/Informatyka/Git/repo/AI_learning_journey/The Art of ML/01_manim/media/videos/ending/1080p60/partial_movie_files/Outro/3047284485_2135674862_2340080163.mp4'
 file 'file:E:/Nauka/Informatyka/Git/repo/AI_learning_journey/The Art of ML/01_manim/media/videos/ending/1080p60/partial_movie_files/Outro/3047284485_170846798_4203425199.mp4'
-file 'file:E:/Nauka/Informatyka/Git/repo/AI_learning_journey/The Art of ML/01_manim/media/videos/ending/1080p60/partial_movie_files/Outro/3047284485_2760824782_1640000396.mp4'
-file 'file:E:/Nauka/Informatyka/Git/repo/AI_learning_journey/The Art of ML/01_manim/media/videos/ending/1080p60/partial_movie_files/Outro/3047284485_3880968470_2094597367.mp4'
+file 'file:E:/Nauka/Informatyka/Git/repo/AI_learning_journey/The Art of ML/01_manim/media/videos/ending/1080p60/partial_movie_files/Outro/3047284485_4190692402_2358810818.mp4'
