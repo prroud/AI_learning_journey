@@ -257,5 +257,5 @@ class Linear3D(ThreeDScene):
         )
         self.wait(3.0)
 
-        self.play(FadeOut(final_group))
+        self.play(FadeOut(n_title_text, n_title_box, n_formula, group_X, group_W, group_WT, dot_product, final_group))
 
