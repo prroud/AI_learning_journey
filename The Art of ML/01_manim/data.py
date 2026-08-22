@@ -145,6 +145,6 @@ class Data(Scene):
         banner_final = Text("Learning is done, found the minima of loss function", font_size=32, weight=BOLD, color="#fffcd6").to_corner(UP)
         self.play(Transform(banner, banner_final))
         self.play(Indicate(line, color=GREEN), Indicate(param_dot, color=GREEN))
-        self.wait(2)
+        self.wait(3)
 
         self.play(*[FadeOut(mob) for mob in self.mobjects])
