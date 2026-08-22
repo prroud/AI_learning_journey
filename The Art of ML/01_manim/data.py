@@ -147,4 +147,12 @@ class Data(Scene):
         self.play(Indicate(line, color=GREEN), Indicate(param_dot, color=GREEN))
         self.wait(3)
 
-        self.play(*[FadeOut(mob) for mob in self.mobjects])
+        fade_to_black = Rectangle(
+                        width=config.frame_width + 1,
+                        height=config.frame_height + 1,
+                        color=BLACK,
+                        fill_color=BLACK,
+                        fill_opacity=1
+                    )
+
+        self.play(*[FadeOut(mob) for mob in self.mobjects], FadeIn(fade_to_black), run_time=1.5)

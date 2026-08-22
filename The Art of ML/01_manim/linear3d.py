@@ -92,10 +92,14 @@ class Linear3D(ThreeDScene):
         panel_box = SurroundingRectangle(right_panel, color="#78716c", buff=0.25, corner_radius=0.1)
         ui_panel_group = VGroup(right_panel, panel_box)
 
+        
 
-        self.add_fixed_in_frame_mobjects(title_text, title_box)
+
+        self.add_fixed_in_frame_mobjects(title_text)
         self.play(Write(title_text))
-        self.play(Create(title_box), run_time=1.2)
+
+        self.add_fixed_in_frame_mobjects(title_box)
+        self.play(Write(title_box), run_time=1.2)
         
 
         self.play(FadeIn(axes), FadeIn(axes_labels))
@@ -164,8 +168,13 @@ class Linear3D(ThreeDScene):
         n_title_box = SurroundingRectangle(n_title_text, buff=0.15, corner_radius=0.1, color="#78716c")
         n_title_group = VGroup(n_title_text, n_title_box).to_edge(UP, buff=0.3)
 
-        self.add_fixed_in_frame_mobjects(n_title_group)
-        self.play(Write(n_title_text), Create(n_title_box), run_time=1.2)
+        self.add_fixed_in_frame_mobjects(n_title_text)
+        self.play(Write(n_title_text))
+
+        # Dopiero teraz rejestrujesz ramkę i natychmiast ją piszesz:
+        self.add_fixed_in_frame_mobjects(n_title_box)
+        self.play(Write(n_title_box), run_time=1.2)   
+
         self.wait(0.5)
 
         # 2. General scalar equation for n dimensions
@@ -257,5 +266,13 @@ class Linear3D(ThreeDScene):
         )
         self.wait(3.0)
 
-        self.play(FadeOut(n_title_text, n_title_box, n_formula, group_X, group_W, group_WT, dot_product, final_group))
+        fade_to_black = Rectangle(
+                        width=config.frame_width + 1,
+                        height=config.frame_height + 1,
+                        color=BLACK,
+                        fill_color=BLACK,
+                        fill_opacity=1
+                    )
+
+        self.play(FadeOut(n_title_text, n_title_box, n_formula, group_X, group_W, group_WT, dot_product, final_group), FadeIn(fade_to_black), run_time=1.5)
 
