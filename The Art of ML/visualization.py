@@ -19,4 +19,4 @@ def plot_predictions(
         plt.scatter(test_data, predictions, c="r", s=4, label="Predictions")
 
     # Show the legend
-    plt.legend(prop={"size": 14})
+    plt.legend()
