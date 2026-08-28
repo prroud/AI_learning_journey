@@ -167,10 +167,11 @@ def train_model(model, train_data, val_data, epochs):
 
     for epoch in range(epochs):
         model.train()
-        train_loss, train_acc, train_f1, train_rec = 0, 0, 0, 0
+        train_loss = 0
 
         for X_batch, y_batch in train_data:
             X_batch, y_batch = X_batch.to(device), y_batch.to(device)
+
             optimizer.zero_grad()
             y_preds = model(X_batch)
             loss = criterion(y_preds, y_batch)
@@ -178,17 +179,23 @@ def train_model(model, train_data, val_data, epochs):
             optimizer.step()
 
             train_loss += loss.item()
-            train_acc += accuracy(y_preds, y_batch).item()
-            train_f1 += f1(y_preds, y_batch).item()
-            train_rec += recall(y_preds, y_batch).item()
+
+            accuracy(y_preds, y_batch)
+            f1(y_preds, y_batch)
+            recall(y_preds, y_batch)
 
         train_loss /= len(train_data)
-        train_acc /= len(train_data)
-        train_f1 /= len(train_data)
-        train_rec /= len(train_data)
+
+        train_acc = accuracy.compute().item()
+        train_f1 = f1.compute().item()
+        train_rec = recall.compute().item()
+
+        accuracy.reset()
+        f1.reset()
+        recall.reset()
 
         model.eval()
-        val_loss, val_acc, val_f1, val_rec = 0, 0, 0, 0
+        val_loss = 0
 
         with torch.inference_mode():
             for X_batch, y_batch in val_data:
@@ -196,19 +203,25 @@ def train_model(model, train_data, val_data, epochs):
                 y_val_preds = model(X_batch)
 
                 val_loss += criterion(y_val_preds, y_batch).item()
-                val_acc += accuracy(y_val_preds, y_batch).item()
-                val_f1 += f1(y_val_preds, y_batch).item()
-                val_rec += recall(y_val_preds, y_batch).item()
+
+                accuracy(y_val_preds, y_batch)
+                f1(y_val_preds, y_batch)
+                recall(y_val_preds, y_batch)
 
         val_loss /= len(val_data)
-        val_acc /= len(val_data)
-        val_f1 /= len(val_data)
-        val_rec /= len(val_data)
+
+        val_acc = accuracy.compute().item()
+        val_f1 = f1.compute().item()
+        val_rec = recall.compute().item()
+
+        accuracy.reset()
+        f1.reset()
+        recall.reset()
 
         if val_loss < best_val_loss:
             best_val_loss = val_loss
             torch.save(model.state_dict(), 'best_weights.pth')
-            print(f"*** Zapisano model (Val Loss: {val_loss:.4f}) ***")
+            print(f"*** Saved model (Val Loss: {val_loss:.4f}) ***")
 
         print(f"Epoch {epoch+1}/{epochs} | "
               f"Train Loss: {train_loss:.4f}, Acc: {train_acc*100:.2f}%, F1: {train_f1:.4f} | "
@@ -216,25 +229,32 @@ def train_model(model, train_data, val_data, epochs):
         print("-" * 70)
 
 def test_model(model, test_data):
-    test_loss, test_acc, test_f1, test_rec, test_prec = 0, 0, 0, 0, 0
-
+    test_loss = 0
     model.eval()
+
     with torch.inference_mode():
         for X_batch, y_batch in test_data:
             X_batch, y_batch = X_batch.to(device), y_batch.to(device)
             y_test_preds = model(X_batch)
 
             test_loss += criterion(y_test_preds, y_batch).item()
-            test_acc += accuracy(y_test_preds, y_batch).item()
-            test_f1 += f1(y_test_preds, y_batch).item()
-            test_rec += recall(y_test_preds, y_batch).item()
-            test_prec += precision(y_test_preds, y_batch).item()
+
+            accuracy(y_test_preds, y_batch)
+            f1(y_test_preds, y_batch)
+            recall(y_test_preds, y_batch)
+            precision(y_test_preds, y_batch)
 
     test_loss /= len(test_data)
-    test_acc /= len(test_data)
-    test_f1 /= len(test_data)
-    test_rec /= len(test_data)
-    test_prec /= len(test_data)
+
+    test_acc = accuracy.compute().item()
+    test_f1 = f1.compute().item()
+    test_rec = recall.compute().item()
+    test_prec = precision.compute().item()
+
+    accuracy.reset()
+    f1.reset()
+    recall.reset()
+    precision.reset()
 
     print("\n" + "="*40)
     print("Final results on test dataset: \n")
