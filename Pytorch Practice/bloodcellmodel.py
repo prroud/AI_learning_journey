@@ -90,6 +90,8 @@ val_size = len(full_train_dataset) - train_size
 
 generator = torch.Generator().manual_seed(42)
 train_subset, _ = random_split(full_train_dataset, [train_size, val_size], generator=generator)
+
+generator.manual_seed(42)
 _, val_subset = random_split(full_val_dataset, [train_size, val_size], generator=generator)
 
 train_dataloader = DataLoader(
